@@ -1,5 +1,6 @@
 ![PyPowerSchool](Images/pypowerschool.png)
 
+![PyPI](https://img.shields.io/pypi/v/pypowerschool)
 [![MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 
