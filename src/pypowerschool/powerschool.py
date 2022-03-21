@@ -291,9 +291,9 @@ class Client(CoreResourcesMixin):
             return response.json()['record']
         except KeyError:
             sys.stderr.write(f"An error occured: {response.json().get('message')}\n")
+            return []
         except Exception as generic_error:
             sys.stderr.write(f"An error occured executing a PowerQuery: {generic_error}\n")
-        finally:
             return []
 
     def resource_count(self, resource_url: str, params: str = None) -> int:
