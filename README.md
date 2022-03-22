@@ -1,7 +1,7 @@
 ![PyPowerSchool](Images/pypowerschool.png)
 
-![PyPI](https://img.shields.io/pypi/v/pypowerschool)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pypowerschool)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pypowerschool)](https://pypi.org/project/pypowerschool/)
+[![PyPI](https://img.shields.io/pypi/v/pypowerschool?label=pypi%20package)](https://pypi.org/project/pypowerschool/)
 [![MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 
