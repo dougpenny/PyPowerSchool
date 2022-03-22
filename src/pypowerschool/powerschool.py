@@ -290,7 +290,12 @@ class Client(CoreResourcesMixin):
                 response = await async_client.post(powerquery_url, data=data, headers=self.headers)
             return response.json()['record']
         except KeyError:
-            sys.stderr.write(f"An error occured: {response.json().get('message')}\n")
+            if response.json().get('message') == 'Validation Failed':
+                sys.stderr.write(
+                    f"{response.json().get('message')}\n{response.json().get('errors')}\n"
+                )
+            else:
+                sys.stderr.write(f"An error occured: {response.json().get('message')}\n")
             return []
         except Exception as generic_error:
             sys.stderr.write(f"An error occured executing a PowerQuery: {generic_error}\n")
