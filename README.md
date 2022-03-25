@@ -45,16 +45,16 @@ client = powerschool.Client('https://example.powerschool.com', 'client-id', 'cli
 Once you have a client, you can start making asychronous calls to the API.
 ```python
 # returns list of all schools in the current district
-all_schools = client.schools_in_district()
+all_schools = await client.schools_in_district()
 
 # returns list of all students for school with ID of 3
-students = client.students_for_school(3)
+students = await client.students_for_school(3)
 
 # returns dictionary of student with DCID of 1234
-student = client.student_for_dcid(1234)
+student = await client.student_for_dcid(1234)
 ```
 
-Refer to the [`endpoints.py`](./src/pypowerschool/endpoints.py) file for other built-in methods. Additionally, you can use the [`fetch_item`](./src/pypowerschool/powerschool.py#L130)  and [`fetch_items`](./src/pypowerschool/powerschool.py#L162)  methods to access any PowerSchool endpoint. Basic support for `POST` has been included through the [`post_data`](./src/pypowerschool/powerschool.py#L229)  method.
+Refer to the [`endpoints.py`](./src/pypowerschool/endpoints.py) file for other built-in methods. Additionally, you can use the [`fetch_item`](./src/pypowerschool/powerschool.py#L130) and [`fetch_items`](./src/pypowerschool/powerschool.py#L162) methods to access any PowerSchool endpoint. Basic support for `POST` has been included through the [`post_data`](./src/pypowerschool/powerschool.py#L229) method.
 
 ---
 
@@ -65,10 +65,10 @@ Using a PowerQuery endpoint works just like any other endpoint. The `powerquery`
 
 ```python
 # returns a list of grade levels for the school and district office
-grade_levels = client.powerquery('/ws/schema/query/com.pearson.core.schools.grade_levels')
+grade_levels = await client.powerquery('/ws/schema/query/com.pearson.core.schools.grade_levels')
 
 # returns school information for the school with an ID of 1
-school_details = client.powerquery('/ws/schema/query/com.pearson.core.school.school_detail', {'school_number':[1]})
+school_details = await client.powerquery('/ws/schema/query/com.pearson.core.school.school_detail', {'school_number':[1]})
 ```
 
 ## Contributing
