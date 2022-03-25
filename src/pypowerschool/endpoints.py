@@ -26,7 +26,8 @@ class CoreResourcesMixin:
         Retrieves the course with a given dcid.
 
         Args:
-            course_dcid (int): DCID value for desired course.
+            course_dcid (int):
+                DCID value for desired course
 
         Returns:
             A dictionary representing the retrieved course.
@@ -49,9 +50,10 @@ class CoreResourcesMixin:
         Retrieves the school with a given ID.
 
         Args:
-            school_id (int): ID value for desired school.
+            school_id (int):
+                ID value for desired school
             with_expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
 
         Returns:
             A dictionary representing the retrieved school.
@@ -65,9 +67,10 @@ class CoreResourcesMixin:
         Retrieves the section with a given dcid.
 
         Args:
-            section_dcid (int): DCID value for desired section.
+            section_dcid (int):
+                DCID value for desired section
             with_expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
 
         Returns:
             A dictionary representing the retrieved section.
@@ -81,9 +84,10 @@ class CoreResourcesMixin:
         Retrieves the staff with a given dcid.
 
         Args:
-            staff_dcid (int): DCID value for desired staff.
+            staff_dcid (int):
+                DCID value for desired staff
             with_expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
 
         Returns:
             A dictionary representing the retrieved staff.
@@ -97,9 +101,10 @@ class CoreResourcesMixin:
         Retrieves the student with a given dcid.
 
         Args:
-            student_dcid (int): DCID value for desired student.
+            student_dcid (int):
+                DCID value for desired student
             with_expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
 
         Returns:
             A dictionary representing the retrieved student.
@@ -113,7 +118,8 @@ class CoreResourcesMixin:
         Retrieves the term with a given dcid.
 
         Args:
-            term_dcid (int): DCID value for desired term.
+            term_dcid (int):
+                DCID value for desired term
 
         Returns:
             A dictionary representing the retrieved term.
@@ -124,26 +130,59 @@ class CoreResourcesMixin:
     #
     # Paging endpoint; these return collections of items
     #
+    async def courses_for_school(self, school_id: int) -> List:
+        """
+        Retrieves the courses for a given school.
+
+        Args:
+            school_id (int):
+                ID value for the school
+
+        Returns:
+            A list of dictionaries representing the retrieved courses.
+        """
+        return await self.fetch_items(f"ws/v1/school/{school_id}/course")
+
     async def schools_in_district(self, with_expansions: str = None) -> List:
         """
         Retrieve all of the schools in the district.
 
         with_expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
 
         Returns:
             A list of dictionaries representing the retrieved schools.
         """
         return await self.fetch_items("ws/v1/district/school", expansions=with_expansions)
 
+    async def sections_for_school(self, school_id: int, with_expansions: str = None,
+                                  query: str = None) -> List:
+        """
+        Retrieves the sections for a given school.
+
+        Args:
+            school_id (int):
+                ID value for the school
+            with_expansions (str, optional):
+                Comma-delimited list of elements to expand
+            query (str, optional):
+                Criteria for selecting a subset of records
+
+        Returns:
+            A list of dictionaries representing the retrieved sections.
+        """
+        return await self.fetch_items(f"ws/v1/school/{school_id}/section",
+                                      expansions=with_expansions, query=query)
+
     async def staff_for_school(self, school_id: int, with_expansions: str = None) -> List:
         """
         Retrieves all of the staff with a given school ID.
 
         Args:
-            school_id (int): ID value for the school.
+            school_id (int):
+                ID value for the school
             with_expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
 
         Returns:
             A list of dictionaries representing the retrieved staff.
@@ -157,9 +196,10 @@ class CoreResourcesMixin:
         Retrieves all of the students with a given school ID.
 
         Args:
-            school_id (int): ID value for the school.
+            school_id (int):
+                ID value for the school
             with_expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
 
         Returns:
             A list of dictionaries representing the retrieved students.
@@ -173,9 +213,9 @@ class CoreResourcesMixin:
 
         Args:
             with_expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
             query (str, optional):
-                Criteria for selecting a subset of records.
+                Criteria for selecting a subset of records
 
         Returns:
             A list of dictionaries representing the retrieved students.

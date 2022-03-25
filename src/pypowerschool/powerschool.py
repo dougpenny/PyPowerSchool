@@ -52,17 +52,17 @@ class Client(CoreResourcesMixin):
         """
         Initializes a new Client object.
 
+        The client ID and client secret can be found under
+        Data Provider Configuration after installing a basic data access
+        PowerSchool plugin.
+
         Args:
             base_url:
-                The base URL of the PowerSchool server.
+                Base URL of the PowerSchool server
             client_id:
-                Client ID for accessing the PowerSchool server. The client ID
-                can be found under Data Provider Configuration after installing
-                a basic data access PowerSchool plugin.
+                Client ID for accessing the PowerSchool server
             client_secret:
-                Client secret for accessing the PowerSchool server. The client
-                secret can be found under Data Provider Configuration after
-                installing a basic data access PowerSchool plugin.
+                Client secret for accessing the PowerSchool server
         """
         self.base_url = url
         self.client_id = client_id.encode("UTF-8")
@@ -116,8 +116,8 @@ class Client(CoreResourcesMixin):
         Checkes to see if an access token exists and, if so, if it has expired.
 
         Returns:
-            True if the token has expired or does not exist
-            False if the token exists and is valid
+            True if the token has expired or does not exist or
+            False if the token exists and is valid.
         """
         if hasattr(self, "access_token_response"):
             if self.access_token_response["expiration_datetime"] > datetime.datetime.now():
@@ -135,13 +135,13 @@ class Client(CoreResourcesMixin):
 
         Args:
             resource_endpoint (str):
-                Endpoint URL for the requested resource.
+                Endpoint URL for the requested resource
             expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
             extensions (str, optional):
-                Comma-delimited list of extensions (1:1) to query.
+                Comma-delimited list of extensions (1:1) to query
             query (str, optional):
-                Criteria for selecting a subset of records.
+                Criteria for selecting a subset of records
 
         Returns:
             A dictionary representing the record retrieved.
@@ -171,13 +171,13 @@ class Client(CoreResourcesMixin):
 
         Args:
             resource_endpoint (str):
-                Endpoint URL for the requested resource.
+                Endpoint URL for the requested resource
             expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
             extensions (str, optional):
-                Comma-delimited list of extensions (1:1) to query.
+                Comma-delimited list of extensions (1:1) to query
             query (str, optional):
-                Criteria for selecting a subset of records.
+                Criteria for selecting a subset of records
 
         Returns:
             A list of dictionaries representing the collection retrieved.
@@ -232,9 +232,9 @@ class Client(CoreResourcesMixin):
 
         Args:
             endpoint (str):
-                Endpoint URL for the new entry.
+                Endpoint URL for the new entry
             post_data (dict):
-                Dictionay of values used for creating the new entry.
+                Dictionay of values used for creating the new entry
 
         Returns:
             If creation is successful, the ID of the new entry,
@@ -270,13 +270,13 @@ class Client(CoreResourcesMixin):
 
         Args:
             resource_endpoint (str):
-                Endpoint URL for the PowerQuery resource.
+                Endpoint URL for the PowerQuery resource
             expansions (str, optional):
-                Comma-delimited list of elements to expand.
+                Comma-delimited list of elements to expand
             extensions (str, optional):
-                Comma-delimited list of extensions (1:1) to query.
+                Comma-delimited list of extensions (1:1) to query
             query (str, optional):
-                Criteria for selecting a subset of records.
+                Criteria for selecting a subset of records
 
         Returns:
             A list of dictionaries representing the collection retrieved.
@@ -307,7 +307,7 @@ class Client(CoreResourcesMixin):
 
         Args:
             endpoint (str):
-                Endpoint URL for the requested resource.
+                Endpoint URL for the requested resource
             params (dict, optional):
                 Dictionay of parameters to include with the request. These may
                 included expansions, extensions, and/or queries.
