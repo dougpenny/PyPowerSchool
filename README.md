@@ -5,7 +5,7 @@
 [![MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 
-PyPowerSchool is a basic Python wrapper for asychronous communication with the PowerSchool API. The goal is to simplify the process of communicating with the [PowerSchool Student Information System](https://www.powerschool.com/solutions/student-information-system-sis/) API by handling authentication and decoding, allowing you to focus on using the data, not retrieving it.
+PyPowerSchool is a basic Python wrapper for asynchronous communication with the PowerSchool API. The goal is to simplify the process of communicating with the [PowerSchool Student Information System](https://www.powerschool.com/solutions/student-information-system-sis/) API by handling authentication and decoding, allowing you to focus on using the data, not retrieving it.
 
 _PyPowerSchool is not endorsed, sponsored, or affilitated with PowerSchool in any way._
 
@@ -42,7 +42,7 @@ from pypowerschool import powerschool
 client = powerschool.Client('https://example.powerschool.com', 'client-id', 'client-secret')
 ```
 
-Once you have a client, you can start making asychronous calls to the API.
+Once you have a client, you can start making asynchronous calls to the API.
 ```python
 # returns list of all schools in the current district
 all_schools = await client.schools_in_district()

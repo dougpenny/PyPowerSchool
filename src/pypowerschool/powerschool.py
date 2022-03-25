@@ -31,7 +31,7 @@ class Client(CoreResourcesMixin):
     developer documentation.
     https://support.powerschool.com/developer/
 
-    Requests are made asychronously when possible. There are a few situations,
+    Requests are made asynchronously when possible. There are a few situations,
     like requesting mulitple pages of data, that synchronous calls are
     required.
 
