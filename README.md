@@ -56,8 +56,6 @@ student = await client.student_for_dcid(1234)
 
 Refer to the [`endpoints.py`](./src/pypowerschool/endpoints.py) file for other built-in methods. Additionally, you can use the [`fetch_item`](./src/pypowerschool/powerschool.py#L130) and [`fetch_items`](./src/pypowerschool/powerschool.py#L162) methods to access any PowerSchool endpoint. Basic support for `POST` has been included through the [`post_data`](./src/pypowerschool/powerschool.py#L229) method.
 
----
-
 ## PowerQueries
 PowerQueries are a feature that allows for the creation of custom API endpoints. PyPowerSchool only includes core endpoints and PowerQueries provided directly by PowerSchool. To add additional core PowerQueries to PyPowerSchool, you will need to modify the plugin file ([PSDataAccessCorePlugin](https://github.com/dougpenny/PSDataAccessCorePlugin)) with the proper <[access-request](https://support.powerschool.com/developer/#/page/access-request)> elements.
 
@@ -77,8 +75,6 @@ If you have a feature or idea you would like to see added to PyPowerSchool, plea
 Likewise, if you come across a bug, please [create an issue](https://github.com/dougpenny/PyPowerSchool/issues/new) explaining the bug with as much detail as possible.
 
 The PowerSchool API provides access to a lot of information and, unfortunately, we don't have time to research and implement every endpoint. Please feel free to open a pull request with any additional endpoints you create. We would love to have as many of the core endpoints covered as possible.
-
----
 
 ## License
 PyPowerSchool is released under an MIT license. See [LICENSE](https://opensource.org/licenses/MIT) for more information.
