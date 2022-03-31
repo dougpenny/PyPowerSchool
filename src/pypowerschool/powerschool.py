@@ -48,6 +48,14 @@ class Client(CoreResourcesMixin):
         resource_count(self, resource_url: str, params: str = None) -> int
     """
 
+    def __new__(cls, *args):
+        """
+        Construct a new, singleton instance of the Client class.
+        """
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(Client, cls).__new__(cls)
+        return cls.instance
+
     def __init__(self, url: str, client_id: str, client_secret: str) -> None:
         """
         Initializes a new Client object.
@@ -256,7 +264,7 @@ class Client(CoreResourcesMixin):
             sys.stderr.write(f"An error occured attempting to post data: {e}\n")
             return None
 
-    async def powerquery(self, powerquery_endpoint: str, params: Dict = None) -> List:
+    def powerquery(self, powerquery_endpoint: str, args: Dict = None) -> List:
         """
         Invokes a PowerQuery.
 
@@ -269,14 +277,10 @@ class Client(CoreResourcesMixin):
         resource in PowerSchool.
 
         Args:
-            resource_endpoint (str):
+            powerquery_endpoint (str):
                 Endpoint URL for the PowerQuery resource
-            expansions (str, optional):
-                Comma-delimited list of elements to expand
-            extensions (str, optional):
-                Comma-delimited list of extensions (1:1) to query
-            query (str, optional):
-                Criteria for selecting a subset of records
+            args (Dict, optional):
+                Dictionary of arguments to pass to the PowerQuery
 
         Returns:
             A list of dictionaries representing the collection retrieved.
@@ -284,22 +288,30 @@ class Client(CoreResourcesMixin):
         if self._access_token_expired():
             self.headers["Authorization"] = self._access_token()
         powerquery_url = urljoin(self.base_url, powerquery_endpoint)
-        data = json.dumps(params) if params else '{}'
-        try:
-            async with httpx.AsyncClient() as async_client:
-                response = await async_client.post(powerquery_url, data=data, headers=self.headers)
-            return response.json()['record']
-        except KeyError:
-            if response.json().get('message') == 'Validation Failed':
-                sys.stderr.write(
-                    f"{response.json().get('message')}\n{response.json().get('errors')}\n"
-                )
-            else:
-                sys.stderr.write(f"An error occured: {response.json().get('message')}\n")
-            return []
-        except Exception as generic_error:
-            sys.stderr.write(f"An error occured executing a PowerQuery: {generic_error}\n")
-            return []
+        body = json.dumps(args) if args else '{}'
+        data = []
+        params = {'page': 1}
+        with httpx.Client() as client:
+            count_response = client.post(powerquery_url + '/count', headers=self.headers)
+            items_count = count_response.json()['count']
+            while len(data) < items_count:
+                try:
+                    response = client.post(powerquery_url, data=body, headers=self.headers,
+                                           params=params)
+                    data.extend(response.json()['record'])
+                except KeyError:
+                    if response.json().get('message') == 'Validation Failed':
+                        sys.stderr.write(
+                            f"{response.json().get('message')}\n{response.json().get('errors')}\n"
+                        )
+                    else:
+                        sys.stderr.write(f"An error occured: {response.json().get('message')}\n")
+                    return []
+                except Exception as generic_error:
+                    sys.stderr.write(f"An error occured executing a PowerQuery: {generic_error}\n")
+                    return []
+                params['page'] = params['page'] + 1
+        return data
 
     def resource_count(self, resource_url: str, params: str = None) -> int:
         """
