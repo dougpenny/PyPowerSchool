@@ -292,7 +292,8 @@ class Client(CoreResourcesMixin):
         data = []
         params = {'page': 1}
         with httpx.Client() as client:
-            count_response = client.post(powerquery_url + '/count', headers=self.headers)
+            count_response = client.post(powerquery_url + '/count', data=body,
+                                         headers=self.headers)
             items_count = count_response.json()['count']
             while len(data) < items_count:
                 try:
