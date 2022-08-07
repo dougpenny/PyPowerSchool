@@ -111,6 +111,9 @@ class Client(CoreResourcesMixin):
         data = "grant_type=client_credentials"
         r = httpx.post(token_url, data=data, headers=headers)
         response = r.json()
+        auth_error = response.get('error')
+        if auth_error:
+            sys.stderr.write(f"A connection error occured: {auth_error}\n")
         response["expiration_datetime"] = datetime.datetime.now() + datetime.timedelta(
             seconds=int(response["expires_in"])
         )
