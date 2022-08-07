@@ -114,6 +114,7 @@ class Client(CoreResourcesMixin):
         auth_error = response.get('error')
         if auth_error:
             sys.stderr.write(f"A connection error occured: {auth_error}\n")
+            return None
         response["expiration_datetime"] = datetime.datetime.now() + datetime.timedelta(
             seconds=int(response["expires_in"])
         )
