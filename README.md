@@ -63,10 +63,10 @@ Using a PowerQuery endpoint works just like any other endpoint. The `powerquery`
 
 ```python
 # returns a list of grade levels for the school and district office
-grade_levels = await client.powerquery('/ws/schema/query/com.pearson.core.schools.grade_levels')
+grade_levels = client.powerquery('/ws/schema/query/com.pearson.core.schools.grade_levels')
 
 # returns school information for the school with an ID of 1
-school_details = await client.powerquery('/ws/schema/query/com.pearson.core.school.school_detail', {'school_number':[1]})
+school_details = client.powerquery('/ws/schema/query/com.pearson.core.school.school_detail', {'school_number':[1]})
 ```
 
 ## Contributing
