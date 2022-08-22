@@ -268,7 +268,8 @@ class Client(CoreResourcesMixin):
             sys.stderr.write(f"An error occured attempting to post data: {e}\n")
             return None
 
-    def powerquery(self, powerquery_endpoint: str, args: Dict = None) -> List:
+    def powerquery(
+            self, powerquery_endpoint: str, args: Dict = None, extensions: str = None) -> List:
         """
         Invokes a PowerQuery.
 
@@ -285,6 +286,8 @@ class Client(CoreResourcesMixin):
                 Endpoint URL for the PowerQuery resource
             args (Dict, optional):
                 Dictionary of arguments to pass to the PowerQuery
+            extensions (str, optional):
+                Comma-delimited list of extensions (1:1) to include
 
         Returns:
             A list of dictionaries representing the collection retrieved.
@@ -295,6 +298,10 @@ class Client(CoreResourcesMixin):
         body = json.dumps(args) if args else '{}'
         data = []
         params = {'page': 1}
+
+        if extensions:
+            params['extensions'] = extensions
+
         with httpx.Client() as client:
             count_response = client.post(powerquery_url + '/count', data=body,
                                          headers=self.headers)
