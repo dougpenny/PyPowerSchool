@@ -1,9 +1,36 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pypowerschool"
+version = "0.2.0"
+authors = [
+    { name = "Doug Penny", email = "dpenny@icloud.com" },
 ]
-build-backend = "setuptools.build_meta"
+description = "Synchronous client for PowerSchool API"
+readme = "README.md"
+python_requires = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "httpx >= 0.22.0",
+]
+
+[project.license]
+file = "LICENSE"
+
+[project.urls]
+"Homepage" = "https://github.com/dougpenny/PyPowerSchool"
+"Bug Tracker" = "https://github.com/dougpenny/PyPowerSchool/issues"
 
 [tool.black]
 line-length = 99

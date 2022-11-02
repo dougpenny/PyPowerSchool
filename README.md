@@ -5,7 +5,7 @@
 [![MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 
-PyPowerSchool is a basic Python wrapper for asynchronous communication with the PowerSchool API. The goal is to simplify the process of communicating with the [PowerSchool Student Information System](https://www.powerschool.com/solutions/student-information-system-sis/) API by handling authentication and decoding, allowing you to focus on using the data, not retrieving it.
+PyPowerSchool is a basic Python wrapper for synchronous communication with the PowerSchool API. The goal is to simplify the process of communicating with the [PowerSchool Student Information System](https://www.powerschool.com/solutions/student-information-system-sis/) API by handling authentication and decoding, allowing you to focus on using the data, not retrieving it.
 
 _PyPowerSchool is not endorsed, sponsored, or affilitated with PowerSchool in any way._
 
@@ -42,22 +42,22 @@ from pypowerschool import powerschool
 client = powerschool.Client('https://example.powerschool.com', 'client-id', 'client-secret')
 ```
 
-Once you have a client, you can start making asynchronous calls to the API.
+Once you have a client, you can start making synchronous calls to the API.
 ```python
 # returns list of all schools in the current district
-all_schools = await client.schools_in_district()
+all_schools = client.schools_in_district()
 
 # returns list of all students for school with ID of 3
-students = await client.students_for_school(3)
+students = client.students_for_school(3)
 
 # returns dictionary of student with DCID of 1234
-student = await client.student_for_dcid(1234)
+student = client.student_for_dcid(1234)
 ```
 
 Refer to the [`endpoints.py`](./src/pypowerschool/endpoints.py) file for other built-in methods. Additionally, you can use the [`fetch_item`](./src/pypowerschool/powerschool.py#L130) and [`fetch_items`](./src/pypowerschool/powerschool.py#L162) methods to access any PowerSchool endpoint. Basic support for `POST` has been included through the [`post_data`](./src/pypowerschool/powerschool.py#L229) method.
 
 ## PowerQueries
-PowerQueries are a feature that allows for the creation of custom API endpoints. PyPowerSchool only includes core endpoints and PowerQueries provided directly by PowerSchool. To add additional core PowerQueries to PyPowerSchool, you will need to modify the plugin file ([PSDataAccessCorePlugin](https://github.com/dougpenny/PSDataAccessCorePlugin)) with the proper <[access-request](https://support.powerschool.com/developer/#/page/access-request)> elements.
+PowerQueries are a feature that allows for the creation of custom API endpoints. PyPowerSchool only includes core endpoints and PowerQueries provided directly by PowerSchool. To add additional PowerQueries to PyPowerSchool, you will need to modify the plugin file ([PSDataAccessCorePlugin](https://github.com/dougpenny/PSDataAccessCorePlugin)) with the proper <[access-request](https://support.powerschool.com/developer/#/page/access-request)> elements.
 
 Using a PowerQuery endpoint works just like any other endpoint. The `powerquery` method requires the PowerQuery endpoint URL and, optionally, a dictionary of arguements for the PowerQuery.
 

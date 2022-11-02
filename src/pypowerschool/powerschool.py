@@ -11,8 +11,8 @@
 
 import base64
 import datetime
+import logging
 import json
-import sys
 from typing import Dict, List, Union
 from urllib.parse import urljoin
 
@@ -31,9 +31,6 @@ class Client(CoreResourcesMixin):
     developer documentation.
     https://support.powerschool.com/developer/
 
-    Requests are made asynchronously when possible. There are a few situations,
-    like requesting mulitple pages of data, that synchronous calls are
-    required.
 
     Public Methods:
         fetch_item(
@@ -80,14 +77,14 @@ class Client(CoreResourcesMixin):
                 "Accept": "application/json",
                 "Content-Type": "application/json",
                 "Authorization": self._access_token(),
+                "User-Agent": "PyPowerSchool/0.1.9"
             }
-        except httpx.RequestError as e:
-            sys.stderr.write(f"An error occured making the request: {e}\n")
         except httpx.HTTPStatusError as e:
-            sys.stderr.write(f"Error response {e.response.status_code}\n")
-            sys.stderr.write(f"A connection error occured: {e}\n")
+            logging.error(f"A connection error occured, status code: {e.response.status_code}\n")
+        except httpx.RequestError as e:
+            logging.error(f"An error occured making the request: {e}\n")
         except Exception as e:
-            sys.stderr.write(f"An unknown error occured: {e}\n")
+            logging.error(f"An unknown error occured: {e}\n")
 
     def _access_token(self) -> str:
         """
@@ -113,7 +110,7 @@ class Client(CoreResourcesMixin):
         response = r.json()
         auth_error = response.get('error')
         if auth_error:
-            sys.stderr.write(f"A connection error occured: {auth_error}\n")
+            logging.error(f"A connection error occured: {auth_error}\n")
             return None
         response["expiration_datetime"] = datetime.datetime.now() + datetime.timedelta(
             seconds=int(response["expires_in"])
@@ -139,9 +136,7 @@ class Client(CoreResourcesMixin):
         else:
             return True
 
-    async def fetch_item(
-            self, resource_endpoint: str, expansions: str = None, extensions: str = None,
-            query: str = None) -> Dict:
+    def fetch_item(self, resource_endpoint: str, expansions: str = None, extensions: str = None, query: str = None) -> Dict:
         """
         Fetches a single record from PowerSchool.
 
@@ -168,12 +163,10 @@ class Client(CoreResourcesMixin):
             params['q'] = query
         if self._access_token_expired():
             self.headers["Authorization"] = self._access_token()
-        async with httpx.AsyncClient() as async_client:
-            return await async_client.get(endpoint_url, headers=self.headers, params=params)
+        with httpx.Client() as client:
+            return client.get(endpoint_url, headers=self.headers, params=params)
 
-    async def fetch_items(
-            self, resource_endpoint: str, expansions: str = None, extensions: str = None,
-            query: str = None) -> List:
+    def fetch_items(self, resource_endpoint: str, expansions: str = None, extensions: str = None, query: str = None) -> List:
         """
         Fetches a collection of records from PowerSchool.
 
@@ -222,7 +215,7 @@ class Client(CoreResourcesMixin):
                         resource_dict = [requested_resources]
                         data.extend(resource_dict)
                 except Exception as e:
-                    sys.stderr.write(f"An error occured retrieving items: {e}\n")
+                    logging.error(f"An error occured retrieving items: {e}\n")
                     return []
                 page_number += 1
         return data
@@ -238,7 +231,7 @@ class Client(CoreResourcesMixin):
         metadata_response = httpx.get(metadata_endpoint, headers=self.headers)
         return metadata_response.json()["metadata"]
 
-    async def post_data(self, endpoint: str, post_data: Dict) -> Union[None, int]:
+    def post_data(self, endpoint: str, post_data: Dict) -> Union[None, int]:
         """
         Creates a new entry for the given endpoint.
 
@@ -257,19 +250,20 @@ class Client(CoreResourcesMixin):
         post_url = urljoin(self.base_url, endpoint)
         data = json.dumps(post_data)
         try:
-            async with httpx.AsyncClient() as async_client:
-                response = await async_client.post(post_url, data=data, headers=self.headers)
+            with httpx.Client() as client:
+                response = client.post(post_url, data=data, headers=self.headers)
             response = response.json()
-            if response['insert_count'] == 1 and response['result'][0]['status'] == 'SUCCESS':
+            if response.get('insert_count') == 1 and response['result'][0]['status'] == 'SUCCESS':
                 return response['result'][0]['success_message']['id']
             else:
+                if 'message' in response.keys():
+                    logging.error(f"An error occured attempting to post data: {response['message']}")
                 return None
         except Exception as e:
-            sys.stderr.write(f"An error occured attempting to post data: {e}\n")
+            logging.error(f"An error occured attempting to post data: {e}\n")
             return None
 
-    def powerquery(
-            self, powerquery_endpoint: str, args: Dict = None, extensions: str = None) -> List:
+    def powerquery(self, powerquery_endpoint: str, args: Dict = None, extensions: str = None) -> List:
         """
         Invokes a PowerQuery.
 
@@ -313,14 +307,12 @@ class Client(CoreResourcesMixin):
                     data.extend(response.json()['record'])
                 except KeyError:
                     if response.json().get('message') == 'Validation Failed':
-                        sys.stderr.write(
-                            f"{response.json().get('message')}\n{response.json().get('errors')}\n"
-                        )
+                        logging.error(f"{response.json().get('message')}\n{response.json().get('errors')}\n")
                     else:
-                        sys.stderr.write(f"An error occured: {response.json().get('message')}\n")
+                        logging.error(f"An error occured: {response.json().get('message')}\n")
                     return []
                 except Exception as generic_error:
-                    sys.stderr.write(f"An error occured executing a PowerQuery: {generic_error}\n")
+                    logging.error(f"An error occured executing a PowerQuery: {generic_error}\n")
                     return []
                 params['page'] = params['page'] + 1
         return data
@@ -347,5 +339,5 @@ class Client(CoreResourcesMixin):
                 data = client.get(resource_count_url, headers=self.headers, params=params)
             return data.json()["resource"]["count"]
         except Exception as e:
-            sys.stderr.write(f"An error occured retrieving a resource count: {e}\n")
+            logging.error(f"An error occured retrieving a resource count: {e}\n")
             return 0
